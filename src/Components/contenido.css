@@ -1,19 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;500&family=Pixelify+Sans&display=swap');
 
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap');
+/* ---------- Animaciones ---------- */
 
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(40px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeInLeft {
-  from { opacity: 0; transform: translateX(-30px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
+/* La cuadrícula ahora se mueve con transform (la GPU lo maneja),
+   en vez de background-position (que obliga a repintar todo el tiempo). */
 @keyframes gridMove {
-  from { background-position: 0 0; }
-  to   { background-position: 40px 40px; }
+  from { transform: translate(0, 0); }
+  to   { transform: translate(40px, 40px); }
 }
 
 @keyframes statCount {
@@ -21,6 +14,14 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes traceFlow {
+  to { stroke-dashoffset: -32; }
+}
+
+@keyframes ledBlink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
 
 .contenido-root {
   background-color: #ffffff;
@@ -28,15 +29,7 @@
   position: relative;
 }
 
-
-.electric-svg {
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
+/* ---------- Secciones ---------- */
 
 .section {
   padding: 100px 32px;
@@ -53,9 +46,7 @@
   transform: translateY(0);
 }
 
-
 .section-label {
-
   font-family: "Pixelify Sans", sans-serif;
   color: #00a8d4;
   font-size: 1.5rem;
@@ -82,6 +73,8 @@
   margin-bottom: 56px;
 }
 
+/* ---------- Sobre mí ---------- */
+
 .section-bio {
   border-bottom: 1px solid rgba(0, 168, 212, 0.12);
   position: relative;
@@ -92,28 +85,29 @@
 .section-bio::before {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: -40px 0 0 -40px;
   background-image:
     linear-gradient(rgba(0, 168, 212, 0.04) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 168, 212, 0.04) 1px, transparent 1px);
   background-size: 40px 40px;
   animation: gridMove 12s linear infinite;
+  will-change: transform;
   pointer-events: none;
 }
 
 .bio-grid {
   display: grid;
-  grid-template-columns: 1fr auto; 
+  grid-template-columns: 1fr auto;
   gap: 48px;
   align-items: center;
   position: relative;
 }
 
 .bio-label {
-   font-family: "Pixelify Sans", sans-serif;
+  font-family: "Pixelify Sans", sans-serif;
   color: #00a8d4;
-  font-size: 1.5rem;         
-  letter-spacing: 0.2em;       
+  font-size: 1.5rem;
+  letter-spacing: 0.2em;
   margin-bottom: 16px;
   text-transform: uppercase;
 }
@@ -121,17 +115,17 @@
 .bio-heading {
   font-family: 'Orbitron', sans-serif;
   color: #0a1a4a;
-  font-size: clamp(1.4rem, 5vw, 2.8rem); 
-  letter-spacing: 0.04em;      
+  font-size: clamp(1.4rem, 5vw, 2.8rem);
+  letter-spacing: 0.04em;
   margin-bottom: 28px;
   line-height: 1.2;
-  word-break: break-word;     
+  word-break: break-word;
 }
 
 .bio-body {
   font-family: 'Inter', sans-serif;
   color: #475569;
-  font-size: clamp(0.875rem, 2.5vw, 1rem); 
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
   line-height: 1.8;
   margin-bottom: 16px;
   max-width: 600px;
@@ -173,51 +167,36 @@
   text-transform: uppercase;
 }
 
-
 @media (max-width: 900px) {
-  .bio-grid {
-    gap: 32px;
-  }
-
-  .bio-stats {
-    min-width: 110px;
-  }
+  .bio-grid { gap: 32px; }
+  .bio-stats { min-width: 110px; }
 }
 
 @media (max-width: 640px) {
   .bio-grid {
-    grid-template-columns: 1fr;  
+    grid-template-columns: 1fr;
     gap: 32px;
   }
-
-  .bio-text {
-    order: 1;
-  }
-
+  .bio-text { order: 1; }
   .bio-stats {
     order: 2;
-    flex-direction: row;         
+    flex-direction: row;
     justify-content: center;
     flex-wrap: wrap;
     min-width: unset;
     width: 100%;
     gap: 12px;
   }
-
   .bio-stat {
     flex: 1;
     min-width: 90px;
     padding: 14px 12px;
   }
-
-  .bio-body {
-    max-width: 100%;             
-  }
-
-  .bio-heading {
-    letter-spacing: 0.02em;
-  }
+  .bio-body { max-width: 100%; }
+  .bio-heading { letter-spacing: 0.02em; }
 }
+
+/* ---------- Servicios ---------- */
 
 .section-services {
   background: linear-gradient(180deg, #ffffff 0%, #f0f7ff 100%);
@@ -240,7 +219,7 @@
   cursor: default;
 }
 
-.service-card--hovered {
+.service-card:hover {
   border-color: rgba(0, 168, 212, 0.6);
   box-shadow: 0 8px 32px rgba(0, 168, 212, 0.12);
   transform: translateY(-4px);
@@ -281,9 +260,12 @@
   display: block;
 }
 
-.service-underline--visible {
+.service-card:hover .service-underline {
   transform: translateX(-50%) scaleX(1);
 }
+
+/* ---------- Tecnologías ---------- */
+
 .section-tecnologias {
   background: #ffffff;
   border-bottom: 1px solid rgba(0, 168, 212, 0.12);
@@ -291,19 +273,18 @@
   overflow: hidden;
 }
 
-
 .section-tecnologias::before {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: -40px 0 0 -40px;
   background-image:
     linear-gradient(rgba(0, 168, 212, 0.035) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 168, 212, 0.035) 1px, transparent 1px);
   background-size: 40px 40px;
   animation: gridMove 14s linear infinite;
+  will-change: transform;
   pointer-events: none;
 }
-
 
 .skills-grid {
   display: grid;
@@ -311,7 +292,6 @@
   gap: 20px;
   position: relative;
 }
-
 
 .skill-card {
   position: relative;
@@ -324,16 +304,14 @@
   cursor: default;
 }
 
-.skill-card--hovered {
+.skill-card:hover {
   border-color: color-mix(in sRGB, var(--skill-color) 50%, transparent);
   box-shadow: 0 8px 32px color-mix(in sRGB, var(--skill-color) 12%, transparent);
   transform: translateY(-4px);
 }
 
-
 .skill-card-topbar {
   height: 3px;
-  width: 100%;
   margin: 0 -24px 20px;
   width: calc(100% + 48px);
   background: linear-gradient(
@@ -345,17 +323,20 @@
   position: relative;
 }
 
-
+/* Se quitó el blur(8px) que tenía este resplandor: era costoso de pintar.
+   Un degradado simula el mismo efecto sin filtros. */
 .skill-card-topbar::after {
   content: '';
   position: absolute;
-  top: 0;
+  top: 3px;
   left: 0;
   right: 0;
   height: 12px;
-  background: var(--skill-color);
-  filter: blur(8px);
-  opacity: 0.35;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in sRGB, var(--skill-color) 28%, transparent),
+    transparent
+  );
 }
 
 .skill-card-header {
@@ -379,13 +360,11 @@
   text-transform: uppercase;
 }
 
-
 .skill-pills {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
-
 
 .skill-pill {
   font-family: 'Share Tech Mono', monospace;
@@ -400,11 +379,10 @@
   transition: background 0.2s, border-color 0.2s;
 }
 
-.skill-card--hovered .skill-pill {
+.skill-card:hover .skill-pill {
   background: color-mix(in sRGB, var(--skill-color) 14%, transparent);
   border-color: color-mix(in sRGB, var(--skill-color) 55%, transparent);
 }
-
 
 .skill-underline {
   position: absolute;
@@ -419,22 +397,19 @@
   display: block;
 }
 
-.skill-underline--visible {
+.skill-card:hover .skill-underline {
   transform: translateX(-50%) scaleX(1);
 }
 
-
 @media (max-width: 768px) {
-  .skills-grid {
-    grid-template-columns: 1fr 1fr;
-  }
+  .skills-grid { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 480px) {
-  .skills-grid {
-    grid-template-columns: 1fr;
-  }
+  .skills-grid { grid-template-columns: 1fr; }
 }
+
+/* ---------- Proyectos ---------- */
 
 .section-projects {
   background: #020818;
@@ -444,6 +419,8 @@
   overflow: hidden;
 }
 
+/* Cuadrícula estática: en esta sección ya hay muchas tarjetas,
+   así que se deja quieta para que el scroll sea fluido. */
 .section-projects::before {
   content: '';
   position: absolute;
@@ -452,7 +429,6 @@
     linear-gradient(rgba(0, 180, 255, 0.04) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 180, 255, 0.04) 1px, transparent 1px);
   background-size: 40px 40px;
-  animation: gridMove 8s linear infinite;
   pointer-events: none;
 }
 
@@ -462,6 +438,7 @@
   max-width: 1100px;
   margin-left: auto;
   margin-right: auto;
+  position: relative;
 }
 
 .section-projects .section-label {
@@ -486,180 +463,215 @@
   z-index: 1;
 }
 
-.card-wrap {
-  padding: 2px;
-  border-radius: 1.5em;
+/* ---------- Tarjeta estilo placa PCB ----------
+   Solo usa: bordes, degradados, box-shadow (estático) y transform.
+   Nada de filter / blur / mix-blend-mode. */
+
+.pcb-card {
+  --c: var(--card-color);
   position: relative;
   width: 22rem;
+  border-radius: 18px;
+  border: 1px solid color-mix(in sRGB, var(--c) 45%, transparent);
   background:
-    linear-gradient(-30deg, var(--card-gradient, rgba(100,100,100,0.3)), transparent, var(--card-gradient, rgba(100,100,100,0.3))),
-    linear-gradient(to bottom, #0a0a1a, #0a0a1a);
-  transition: transform 0.3s ease;
-  --card-gradient: color-mix(in sRGB, var(--card-color) 30%, transparent);
+    linear-gradient(160deg, color-mix(in sRGB, var(--c) 10%, #07122b) 0%, #07122b 55%, #050c1f 100%);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.02),
+              0 10px 28px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  transition: transform 0.25s ease, border-color 0.25s ease;
 }
 
-.card-wrap--hovered {
-  transform: translateY(-6px) scale(1.02);
+.pcb-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--c);
 }
 
-.card-inner {
-  position: relative;
+/* Agujeros de montaje */
+.pcb-hole {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #020818;
+  border: 2px solid color-mix(in sRGB, var(--c) 70%, transparent);
+  z-index: 2;
+}
+.pcb-hole--tl { top: 10px; left: 10px; }
+.pcb-hole--tr { top: 10px; right: 10px; }
+.pcb-hole--bl { bottom: 10px; left: 10px; }
+.pcb-hole--br { bottom: 10px; right: 10px; }
+
+/* LED indicador (se enciende al pasar el mouse) */
+.pcb-led {
+  position: absolute;
+  top: 36px;
+  right: 34px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c);
+  opacity: 0.35;
+  transition: opacity 0.25s ease;
+  z-index: 2;
+}
+.pcb-card:hover .pcb-led {
+  opacity: 1;
+  box-shadow: 0 0 8px var(--c);
+  animation: ledBlink 1.4s ease-in-out infinite;
 }
 
-.card-border-outer {
-  border: 2px solid color-mix(in sRGB, var(--card-color) 50%, transparent);
-  border-radius: 1.5em;
-  padding-right: 0.15em;
-  padding-bottom: 0.15em;
-}
-
-.card-main {
+/* Pistas de cobre */
+.pcb-traces {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  aspect-ratio: 7 / 10;
-  border-radius: 1.5em;
-  border: 2px solid var(--card-color);
-  margin-top: -4px;
-  margin-left: -4px;
-}
-
-.card-glow-1 {
-  border: 2px solid color-mix(in sRGB, var(--card-color) 60%, transparent);
-  border-radius: 24px;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  inset: 0;
-  filter: blur(1px);
-}
-
-.card-glow-2 {
-  border: 2px solid var(--card-color);
-  border-radius: 24px;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  inset: 0;
-  filter: blur(4px);
-}
-
-.card-overlay-1 {
-  position: absolute;
-  inset: 0;
-  border-radius: 24px;
-  mix-blend-mode: overlay;
-  transform: scale(1.1);
-  filter: blur(16px);
-  background: linear-gradient(-30deg, white, transparent 30%, transparent 70%, white);
-}
-
-.card-overlay-2 {
-  position: absolute;
-  inset: 0;
-  border-radius: 24px;
-  opacity: 0.5;
-  mix-blend-mode: overlay;
-  transform: scale(1.1);
-  filter: blur(16px);
-  background: linear-gradient(-30deg, white, transparent 30%, transparent 70%, white);
-}
-
-.card-bg-glow {
-  position: absolute;
-  inset: 0;
-  border-radius: 24px;
-  filter: blur(32px);
-  transform: scale(1.1);
+  height: 130px;
+  fill: none;
+  stroke: var(--c);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   opacity: 0.3;
-  z-index: -1;
-  background: linear-gradient(-30deg, var(--card-color), transparent, var(--card-color));
+  pointer-events: none;
+}
+.pcb-traces circle {
+  fill: #020818;
+  stroke-width: 2;
+}
+.pcb-traces path {
+  stroke-dasharray: 6 10;
+}
+.pcb-card:hover .pcb-traces {
+  opacity: 0.7;
+}
+.pcb-card:hover .pcb-traces path {
+  animation: traceFlow 1.2s linear infinite;
 }
 
-.card-content {
-  position: absolute;
-  inset: 0;
+.pcb-body {
+  position: relative;
   display: flex;
   flex-direction: column;
+  padding: 120px 30px 30px;
+  min-height: 26rem;
 }
 
-.card-top {
-  display: flex;
-  flex-direction: column;
-  padding: 36px 36px 16px;
-  height: 100%;
-}
-
-.card-tag {
-  background: radial-gradient(47.2% 50% at 50% 88%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 100%), rgba(255,255,255,0.05);
-  border-radius: 14px;
-  padding: 0.4em 0.9em;
-  width: fit-content;
+/* Etiqueta con forma de circuito integrado: cuerpo + patitas laterales */
+.pcb-chip {
+  position: relative;
+  align-self: flex-start;
+  margin: 0 8px;
+  padding: 6px 12px;
   font-family: 'Share Tech Mono', monospace;
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.8);
+  font-size: 0.74rem;
   letter-spacing: 0.08em;
-  border: 1px solid rgba(255,255,255,0.12);
+  text-transform: uppercase;
+  color: #e8f4ff;
+  background: #0d1a38;
+  border: 1px solid color-mix(in sRGB, var(--c) 55%, transparent);
+  border-radius: 3px;
 }
+.pcb-chip::before,
+.pcb-chip::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  width: 6px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--c) 0 2px,
+    transparent 2px 5px
+  );
+  opacity: 0.8;
+}
+.pcb-chip::before { left: -7px; }
+.pcb-chip::after  { right: -7px; }
 
-.card-title {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: #f0f8ff;
+.pcb-title {
   margin-top: auto;
+  padding-top: 24px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
   line-height: 1.3;
   letter-spacing: 0.02em;
+  color: #f0f8ff;
 }
 
-.card-divider {
+.pcb-divider {
   border: none;
   height: 1px;
-  background: currentColor;
-  opacity: 0.1;
-  margin: 0 36px;
-  mask-image: linear-gradient(to right, transparent, black, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black, transparent);
+  margin: 16px 0;
+  background: linear-gradient(
+    to right,
+    var(--c),
+    color-mix(in sRGB, var(--c) 10%, transparent)
+  );
+  opacity: 0.6;
 }
 
-.card-bottom {
-  padding: 16px 36px 36px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.card-desc {
+.pcb-desc {
   font-family: 'Inter', sans-serif;
   font-size: 0.88rem;
-  color: rgba(255,255,255,0.55);
   line-height: 1.6;
+  color: rgba(255, 255, 255, 0.62);
+  margin-bottom: 14px;
 }
 
-.card-tech {
+.pcb-tech {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
 
-.card-tech-pill {
+.pcb-pill {
   font-family: 'Share Tech Mono', monospace;
   font-size: 0.68rem;
-  color: var(--card-color);
-  background: color-mix(in sRGB, var(--card-color) 10%, transparent);
-  border: 1px solid color-mix(in sRGB, var(--card-color) 40%, transparent);
+  color: var(--c);
+  background: color-mix(in sRGB, var(--c) 10%, transparent);
+  border: 1px solid color-mix(in sRGB, var(--c) 40%, transparent);
   border-radius: 8px;
   padding: 3px 10px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
+.pcb-link {
+  align-self: flex-start;
+  margin-top: 18px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: #e8f4ff;
+  text-decoration: none;
+  padding: 7px 14px;
+  border: 1px solid var(--c);
+  border-radius: 8px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.pcb-link:hover,
+.pcb-link:focus-visible {
+  background: var(--c);
+  color: #020818;
+  outline: none;
+}
 
+/* Si la persona prefiere menos movimiento, se apagan las animaciones */
+@media (prefers-reduced-motion: reduce) {
+  .section-bio::before,
+  .section-tecnologias::before,
+  .pcb-card:hover .pcb-traces path,
+  .pcb-card:hover .pcb-led {
+    animation: none;
+  }
+}
+
+/* ---------- Responsive ---------- */
 
 @media (max-width: 768px) {
-  .section {
-    padding: 64px 20px;
-  }
+  .section { padding: 64px 20px; }
 
   .bio-grid {
     grid-template-columns: 1fr;
@@ -677,12 +689,10 @@
     align-items: center;
   }
 
-  .card-wrap {
+  .pcb-card {
     width: 100%;
     max-width: 22rem;
   }
 
-  .services-grid {
-    grid-template-columns: 1fr;
-  }
+  .services-grid { grid-template-columns: 1fr; }
 }

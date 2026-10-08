@@ -44,11 +44,6 @@ export default function Footer() {
       href: ' https://github.com/Santiago-B612',
       tooltip: 'Repositorios & proyectos',
     },
-    {
-      icon: '✉️',
-      label: 'Correo',
-      href: 'caicedosantiago256@gmail.com',
-    },
   ];
 
   return (

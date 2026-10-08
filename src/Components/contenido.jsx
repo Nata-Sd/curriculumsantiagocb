@@ -1,6 +1,27 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./contenido.css";
 
+/* ============================================================================
+   ZONA EDITABLE  ·  AQUÍ SE AGREGAN / CAMBIAN LOS CONTENIDOS DEL PORTAFOLIO
+   ----------------------------------------------------------------------------
+   Para agregar un PROYECTO NUEVO:
+     1. Copia un bloque completo  { ... },  de la lista PROYECTOS de abajo.
+     2. Pégalo justo antes del corchete de cierre  ];
+     3. Cambia los textos. No olvides la coma al final de cada bloque.
+
+   Campos de cada proyecto:
+     id          -> número ÚNICO (no repetir). El siguiente a 2 es 3, etc.
+     tag         -> etiqueta pequeña de la tarjeta. Ej: "Proyecto 03"
+     titulo      -> nombre del proyecto
+     descripcion -> 1 o 2 frases explicando qué hace
+     tech        -> lista de tecnologías usadas, entre comillas y separadas
+                    por coma. Ej: ["Arduino", "C++", "KiCad"]
+     color       -> color de acento de la tarjeta (código hexadecimal)
+     enlace      -> (OPCIONAL) link a GitHub, video, informe, etc.
+                    Si no quieres botón, borra esa línea completa.
+
+   Para BORRAR un proyecto: elimina su bloque completo { ... },
+   ========================================================================== */
 
 const PROYECTOS = [
   {
@@ -10,8 +31,8 @@ const PROYECTOS = [
     descripcion: "Autónomo con sensor ultrasónico y microcontrolador.",
     tech: ["Arduino", "C++", "Ultrasonido"],
     color: "#dd8448",
+    // enlace: "https://github.com/usuario/robot-evasor",
   },
-
   {
     id: 2,
     tag: "Proyecto 02",
@@ -19,16 +40,39 @@ const PROYECTOS = [
     descripcion: "Integración de panel solar y control remoto vía RF.",
     tech: ["ESP32", "Python", "Solar"],
     color: "#1e90ff",
+    // enlace: "https://github.com/usuario/riego-solar",
   },
-  
+
+  /* ----- PLANTILLA PARA COPIAR (quita los // de cada línea para usarla) -----
+  {
+    id: 3,
+    tag: "Proyecto 03",
+    titulo: "Nombre del proyecto",
+    descripcion: "Qué hace el proyecto en una o dos frases.",
+    tech: ["Tecnología 1", "Tecnología 2"],
+    color: "#00d4aa",
+    enlace: "https://...",
+  },
+  ------------------------------------------------------------------------- */
 ];
 
+/* Colores sugeridos para el campo "color":
+   naranja #dd8448 · azul #1e90ff · verde agua #00d4aa
+   morado #a855f7 · celeste #0ea5e9 · amarillo #f5c542            */
+
+/* ----------------------------------------------------------------------------
+   TECNOLOGÍAS / HERRAMIENTAS
+   Para agregar una herramienta a una categoría existente: añade su nombre
+   (entre comillas) dentro de la lista "items" de esa categoría.
+   Para crear una categoría nueva: copia un bloque completo { ... }, pégalo
+   al final de la lista y cambia categoria, icono, color e items.
+   ---------------------------------------------------------------------------- */
 const SKILLS = [
   {
     categoria: "Lenguajes",
     icono: "💻",
     color: "#1e8fff",
-    items: ["VHDL", "Python", "C#", "MATLAB", "C++",],
+    items: ["VHDL", "Python", "C#", "MATLAB", "C++"],
   },
   {
     categoria: "Modelado 3D",
@@ -56,6 +100,10 @@ const SKILLS = [
   },
 ];
 
+/* ----------------------------------------------------------------------------
+   SERVICIOS
+   Para agregar uno nuevo: copia un bloque { ... } y cambia emoji, titulo y desc.
+   ---------------------------------------------------------------------------- */
 const SERVICIOS = [
   {
     emoji: "🔬",
@@ -89,214 +137,99 @@ const SERVICIOS = [
   },
 ];
 
-function ElectricSVG() {
+/* ----------------------------------------------------------------------------
+   ESTADÍSTICAS de la sección "Sobre mí" (los 3 recuadros con números)
+   ---------------------------------------------------------------------------- */
+const STATS = [
+  { num: "12+", label: "Proyectos" },
+  { num: "5+", label: "Años estudiando" },
+  { num: "10+", label: "Tecnologías" },
+];
+
+/* ============================================================================
+   FIN DE LA ZONA EDITABLE  ·  Más abajo es código del diseño, no hace falta
+   tocarlo para agregar contenido.
+   ========================================================================== */
+
+/* Tarjeta de proyecto estilo placa PCB. */
+function ProjectCard({ proyecto }) {
   return (
-    <svg className="electric-svg" aria-hidden="true">
-      <defs>
-        <filter
-          id="elec-orange"
-          colorInterpolationFilters="sRGB"
-          x="-20%"
-          y="-20%"
-          width="140%"
-          height="140%"
-        >
-          <feTurbulence
-            type="turbulence"
-            baseFrequency="0.02"
-            numOctaves="10"
-            result="noise1"
-            seed="1"
-          />
-          <feOffset in="noise1" dx="0" dy="0" result="off1">
-            <animate
-              attributeName="dy"
-              values="700;0"
-              dur="6s"
-              repeatCount="indefinite"
-              calcMode="linear"
-            />
-          </feOffset>
-          <feTurbulence
-            type="turbulence"
-            baseFrequency="0.02"
-            numOctaves="10"
-            result="noise2"
-            seed="1"
-          />
-          <feOffset in="noise2" dx="0" dy="0" result="off2">
-            <animate
-              attributeName="dy"
-              values="0;-700"
-              dur="6s"
-              repeatCount="indefinite"
-              calcMode="linear"
-            />
-          </feOffset>
-          <feComposite in="off1" in2="off2" result="combined" />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="combined"
-            scale="30"
-            xChannelSelector="R"
-            yChannelSelector="B"
-          />
-        </filter>
-        <filter
-          id="elec-blue"
-          colorInterpolationFilters="sRGB"
-          x="-20%"
-          y="-20%"
-          width="140%"
-          height="140%"
-        >
-          <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="7" />
-          <feColorMatrix type="hueRotate" result="pt1">
-            <animate
-              attributeName="values"
-              values="0;360"
-              dur=".6s"
-              repeatCount="indefinite"
-              calcMode="paced"
-            />
-          </feColorMatrix>
-          <feComposite />
-          <feTurbulence
-            type="turbulence"
-            baseFrequency="0.03"
-            numOctaves="7"
-            seed="5"
-          />
-          <feColorMatrix type="hueRotate" result="pt2">
-            <animate
-              attributeName="values"
-              values="0;333;199;286;64;168;256;157;360"
-              dur="5s"
-              repeatCount="indefinite"
-              calcMode="paced"
-            />
-          </feColorMatrix>
-          <feBlend in="pt1" in2="pt2" mode="normal" result="combined" />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="combined"
-            scale="30"
-            xChannelSelector="R"
-            yChannelSelector="B"
-          />
-        </filter>
-        <filter
-          id="elec-cyan"
-          colorInterpolationFilters="sRGB"
-          x="-20%"
-          y="-20%"
-          width="140%"
-          height="140%"
-        >
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.025"
-            numOctaves="8"
-            seed="3"
-          />
-          <feColorMatrix type="hueRotate" result="pt1">
-            <animate
-              attributeName="values"
-              values="160;220;160"
-              dur="3s"
-              repeatCount="indefinite"
-              calcMode="paced"
-            />
-          </feColorMatrix>
-          <feDisplacementMap
-            in="SourceGraphic"
-            scale="25"
-            xChannelSelector="G"
-            yChannelSelector="R"
-          />
-        </filter>
-      </defs>
-    </svg>
-  );
-}
-
-const FILTERS = ["elec-orange", "elec-blue", "elec-cyan"];
-
-function ProjectCard({ proyecto, index }) {
-  const [hovered, setHovered] = useState(false);
-  const filterId = FILTERS[index % FILTERS.length];
-
-  return (
-    <div
-      className={`card-wrap ${hovered ? "card-wrap--hovered" : ""}`}
+    <article
+      className="pcb-card"
       style={{ "--card-color": proyecto.color }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
     >
-      <div className="card-inner">
-        <div className="card-border-outer">
-          <div className="card-main" style={{ filter: `url(#${filterId})` }} />
+      {/* Agujeros de montaje en las esquinas */}
+      <span className="pcb-hole pcb-hole--tl" />
+      <span className="pcb-hole pcb-hole--tr" />
+      <span className="pcb-hole pcb-hole--bl" />
+      <span className="pcb-hole pcb-hole--br" />
+
+      {/* LED indicador */}
+      <span className="pcb-led" />
+
+      {/* Pistas de cobre decorativas */}
+      <svg
+        className="pcb-traces"
+        viewBox="0 0 352 130"
+        preserveAspectRatio="xMidYMid slice"
+        aria-hidden="true"
+      >
+        <path d="M0 34 H84 L104 54 H196 L212 38 H352" />
+        <path d="M0 78 H52 L72 98 H170" />
+        <path d="M352 82 H292 L270 104 H230" />
+        <circle cx="84" cy="34" r="3.5" />
+        <circle cx="196" cy="54" r="3.5" />
+        <circle cx="170" cy="98" r="3.5" />
+        <circle cx="230" cy="104" r="3.5" />
+      </svg>
+
+      <div className="pcb-body">
+        {/* Etiqueta con forma de chip (circuito integrado) */}
+        <span className="pcb-chip">{proyecto.tag}</span>
+
+        <h3 className="pcb-title">{proyecto.titulo}</h3>
+
+        <hr className="pcb-divider" />
+
+        <p className="pcb-desc">{proyecto.descripcion}</p>
+
+        <div className="pcb-tech">
+          {proyecto.tech.map((t) => (
+            <span key={t} className="pcb-pill">
+              {t}
+            </span>
+          ))}
         </div>
-        <div className="card-glow-1" />
-        <div className="card-glow-2" />
+
+        {proyecto.enlace && (
+          <a
+            className="pcb-link"
+            href={proyecto.enlace}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Ver proyecto
+          </a>
+        )}
       </div>
-
-      <div className="card-overlay-1" />
-      <div className="card-overlay-2" />
-      <div className="card-bg-glow" />
-
-      <div className="card-content">
-        <div className="card-top">
-          <span className="card-tag">{proyecto.tag}</span>
-          <p className="card-title">{proyecto.titulo}</p>
-        </div>
-
-        <hr className="card-divider" />
-
-        <div className="card-bottom">
-          <p className="card-desc">{proyecto.descripcion}</p>
-          <div className="card-tech">
-            {proyecto.tech.map((t) => (
-              <span key={t} className="card-tech-pill">
-                {t}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+    </article>
   );
 }
 
 function ServiceCard({ servicio }) {
-  const [hovered, setHovered] = useState(false);
-
   return (
-    <div
-      className={`service-card ${hovered ? "service-card--hovered" : ""}`}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
+    <div className="service-card">
       <span className="service-emoji">{servicio.emoji}</span>
       <h3 className="service-titulo">{servicio.titulo}</h3>
       <p className="service-desc">{servicio.desc}</p>
-      <span
-        className={`service-underline ${hovered ? "service-underline--visible" : ""}`}
-      />
+      <span className="service-underline" />
     </div>
   );
 }
 
 function SkillCard({ grupo }) {
-  const [hovered, setHovered] = useState(false);
-
   return (
-    <div
-      className={`skill-card ${hovered ? "skill-card--hovered" : ""}`}
-      style={{ "--skill-color": grupo.color }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
+    <div className="skill-card" style={{ "--skill-color": grupo.color }}>
       <div className="skill-card-topbar" />
 
       <div className="skill-card-header">
@@ -312,9 +245,7 @@ function SkillCard({ grupo }) {
         ))}
       </div>
 
-      <span
-        className={`skill-underline ${hovered ? "skill-underline--visible" : ""}`}
-      />
+      <span className="skill-underline" />
     </div>
   );
 }
@@ -324,13 +255,18 @@ function Section({ id, children, className = "" }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) setVisible(true);
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect(); // ya apareció, no hace falta seguir observando
+        }
       },
       { threshold: 0.1 },
     );
-    if (ref.current) observer.observe(ref.current);
+    observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
@@ -345,17 +281,15 @@ function Section({ id, children, className = "" }) {
   );
 }
 
-
 const Contenido = () => {
   return (
     <div className="contenido-root">
-      <ElectricSVG />
-
       <Section id="sobre-mi" className="section-bio">
         <div className="bio-grid">
           <div className="bio-text">
             <p className="bio-label"> SOBRE MÍ</p>
             <h2 className="bio-heading">Ingeniero </h2>
+            {/* Para cambiar la descripción, edita los dos párrafos de abajo */}
             <p className="bio-body">
               Estudiante de Ingeniería Electrónica con enfoque en diseño
               electrónico, desarrollo de sistemas embebidos y soluciones
@@ -372,11 +306,7 @@ const Contenido = () => {
           </div>
 
           <div className="bio-stats">
-            {[
-              { num: "12+", label: "Proyectos" },
-              { num: "5+", label: "Años estudiando" },
-              { num: "10+", label: "Tecnologías" },
-            ].map(({ num, label }) => (
+            {STATS.map(({ num, label }) => (
               <div key={label} className="bio-stat">
                 <span className="bio-stat-num">{num}</span>
                 <span className="bio-stat-label">{label}</span>
@@ -415,8 +345,9 @@ const Contenido = () => {
         <p className="section-label"> PROYECTOS REALIZADOS</p>
         <h2 className="section-heading">Trabajos destacados</h2>
         <div className="projects-grid">
-          {PROYECTOS.map((p, i) => (
-            <ProjectCard key={p.id} proyecto={p} index={i} />
+          {/* Esta lista se llena sola con lo que haya en PROYECTOS (arriba) */}
+          {PROYECTOS.map((p) => (
+            <ProjectCard key={p.id} proyecto={p} />
           ))}
         </div>
       </Section>
